@@ -291,7 +291,6 @@ open class MucModule: Logger, XmppModule, ContextAware, Initializable, EventHand
      - parameter password: password for room if needed
      - parameter ifCreated: callback to be executed after creation
      - parameter onJoined: callback to be executed if room was joined
-
      - returns: instance of Room
      */
     open func join(roomName: String, mucServer: String, nickname: String, password: String? = nil, ifCreated: ((Room)->Void)? = nil, onJoined: ((Room)->Void)? = nil) throws -> Room {
