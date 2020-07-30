@@ -20,6 +20,10 @@
 //
 import Foundation
 
+public enum MucModuleError: Error {
+    case joiningRoomFailed(String)
+}
+
 /**
  Module provides support for [XEP-0045: Multi-User Chat]
  
@@ -285,9 +289,12 @@ open class MucModule: Logger, XmppModule, ContextAware, Initializable, EventHand
      - parameter mucServer: domain of MUC server with room
      - parameter nickname: nickname to use in room
      - parameter password: password for room if needed
+     - parameter ifCreated: callback to be executed after creation
+     - parameter onJoined: callback to be executed if room was joined
+
      - returns: instance of Room
      */
-    open func join(roomName: String, mucServer: String, nickname: String, password: String? = nil, ifCreated: ((Room)->Void)? = nil, onJoined: ((Room)->Void)? = nil) -> Room? {
+    open func join(roomName: String, mucServer: String, nickname: String, password: String? = nil, ifCreated: ((Room)->Void)? = nil, onJoined: ((Room)->Void)? = nil) throws -> Room {
         let roomJid = BareJID(localPart: roomName, domain: mucServer);
         
         let result = roomsManager.getRoomOrCreate(for: roomJid, nickname: nickname, password: password, onCreate: { (room) in
@@ -300,7 +307,7 @@ open class MucModule: Logger, XmppModule, ContextAware, Initializable, EventHand
         case .success(let room):
             return room;
         default:
-            return nil;
+            throw MucModuleError.joiningRoomFailed(roomName)
         }
     }
     
