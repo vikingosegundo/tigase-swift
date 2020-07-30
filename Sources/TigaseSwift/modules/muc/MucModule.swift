@@ -287,7 +287,7 @@ open class MucModule: Logger, XmppModule, ContextAware, Initializable, EventHand
      - parameter password: password for room if needed
      - returns: instance of Room
      */
-    open func join(roomName: String, mucServer: String, nickname: String, password: String? = nil, ifCreated: ((Room)->Void)? = nil, onJoined: ((Room)->Void)? = nil) -> Room {
+    open func join(roomName: String, mucServer: String, nickname: String, password: String? = nil, ifCreated: ((Room)->Void)? = nil, onJoined: ((Room)->Void)? = nil) -> Room? {
         let roomJid = BareJID(localPart: roomName, domain: mucServer);
         
         let result = roomsManager.getRoomOrCreate(for: roomJid, nickname: nickname, password: password, onCreate: { (room) in
@@ -300,7 +300,7 @@ open class MucModule: Logger, XmppModule, ContextAware, Initializable, EventHand
         case .success(let room):
             return room;
         default:
-            return nil!;
+            return nil;
         }
     }
     
